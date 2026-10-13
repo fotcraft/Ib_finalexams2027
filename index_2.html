@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Pick your IB subjects and levels to get your May 2027 exam timetable and add it to your calendar.">
+<title>IB May 2027 Exam Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one calm column. Step 1 picks six subjects, step 2 lists your exams by date. */
+:root{
+  --bg:#FFFFFF; --surface:#F4F5F7; --ink:#14161B; --muted:#626A77; --line:#E4E6EB;
+  --mark:#FFE15C; --warn:#B23F0D;
+  --font:"Figtree",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101216; --surface:#1A1D23; --ink:#ECEEF2; --muted:#9AA1AE; --line:#272B33;
+    --mark:rgba(240,206,64,.32); --warn:#FF9C66; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101216; --surface:#1A1D23; --ink:#ECEEF2; --muted:#9AA1AE; --line:#272B33;
+  --mark:rgba(240,206,64,.32); --warn:#FF9C66; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.wrap{max-width:680px;margin:0 auto;padding-inline:20px;padding-block:40px 64px;display:grid;gap:40px}
+
+header{display:grid;gap:8px}
+.kicker{font-size:13px;font-weight:500;color:var(--muted);margin:0}
+h1{font-size:clamp(28px,6vw,36px);line-height:1.12;font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:52ch}
+
+section{display:grid;gap:16px}
+h2{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:650;margin:0}
+.step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);font-size:13px;font-weight:700}
+
+/* Subject rows */
+.rows{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto 36px;gap:8px;align-items:center}
+select{width:100%;height:46px;padding:0 38px 0 14px;border:1px solid var(--line);border-radius:10px;background-color:var(--surface);
+  appearance:none;-webkit-appearance:none;cursor:pointer;font-size:15px;text-overflow:ellipsis;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 50%,calc(100% - 15px) 50%;background-size:5px 5px;background-repeat:no-repeat}
+select.empty{color:var(--muted)}
+select option{color:var(--ink)}
+.seg{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.seg button{height:38px;min-width:46px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:disabled{opacity:.35;cursor:default}
+.x{width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.x:hover{background:var(--surface);color:var(--ink)}
+.x.ghost{visibility:hidden}
+.rowfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:14px}
+.linkbtn{border:0;background:none;padding:4px 0;font-weight:600;cursor:pointer;color:var(--ink)}
+.linkbtn.quiet{font-weight:500;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.tally{color:var(--muted);font-variant-numeric:tabular-nums}
+.foot-left{display:flex;gap:16px;align-items:center}
+
+details.times{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+details.times summary{cursor:pointer;list-style:none}
+details.times summary::-webkit-details-marker{display:none}
+details.times summary u{text-underline-offset:3px;color:var(--ink)}
+.tgrid{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.tgrid label{display:grid;gap:4px;font-size:13px}
+.tgrid input{height:40px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-variant-numeric:tabular-nums}
+.times p{margin:10px 0 0}
+
+/* Results */
+a.btn{display:inline-flex;align-items:center;text-decoration:none}
+.applebox{display:grid;gap:8px;padding:14px;border:1px solid var(--line);border-radius:12px}
+.applebox .hint{margin:0;font-size:14px;color:var(--muted)}
+.sublinks{display:flex;flex-wrap:wrap;gap:8px}
+.warnbox{border-color:var(--warn)}
+.summary{margin:0;color:var(--muted)}
+.summary b{color:var(--ink);font-weight:600}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);font-size:14px;font-weight:600;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:hover{opacity:.9}
+.status{margin:0;font-size:14px;color:var(--muted);min-height:1.4em}
+textarea.copyout{width:100%;min-height:150px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+
+.list{border-bottom:1px solid var(--line)}
+.day{display:grid;grid-template-columns:88px minmax(0,1fr);gap:16px;padding-block:16px;border-top:1px solid var(--line)}
+.date{display:grid;align-content:start;line-height:1.25}
+.date span{font-size:13px;color:var(--muted)}
+.date b{font-weight:650;font-variant-numeric:tabular-nums}
+.items{display:grid;gap:14px;min-width:0}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;align-items:baseline}
+.subj{font-weight:600;padding-inline:2px;margin-inline:-2px;background:linear-gradient(transparent 55%,var(--mark) 55%,var(--mark) 92%,transparent 92%);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.meta{grid-column:1;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.clash{grid-column:1;font-size:13px;font-weight:600;color:var(--warn)}
+.add{grid-column:2;grid-row:1;font-size:13px;color:var(--muted);white-space:nowrap;text-underline-offset:3px}
+.add:hover{color:var(--ink)}
+@media (max-width:520px){
+  .day{grid-template-columns:minmax(0,1fr);gap:8px}
+  .date{display:flex;gap:6px;align-items:baseline}
+  .date span{font-size:15px;color:var(--ink);font-weight:650}
+  .item{grid-template-columns:minmax(0,1fr)}
+  .add{grid-column:1;grid-row:auto}
+}
+div.empty{padding:28px 20px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
+div.empty p{margin:0}
+
+footer{font-size:13px;color:var(--muted);display:grid;gap:6px;border-top:1px solid var(--line);padding-top:16px}
+footer p{margin:0}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">Unofficial · May 2027 exam session</p>
+    <h1>IB May 2027 Exam Planner</h1>
+    <p class="lede">Choose your subjects and levels to see every paper you sit, in date order.</p>
+  </header>
+
+  <section aria-labelledby="s1">
+    <h2 id="s1"><span class="step">1</span>Your subjects</h2>
+    <div class="rows" id="rows"></div>
+    <div class="rowfoot">
+      <div class="foot-left">
+        <button class="linkbtn" id="add-row" type="button">+ Add a subject</button>
+        <button class="linkbtn quiet" id="clear-all" type="button" hidden>Clear all</button>
+      </div>
+      <span class="tally" id="tally"></span>
+    </div>
+    <details class="times" id="times">
+      <summary id="times-sum"></summary>
+      <div class="tgrid">
+        <label for="t-am">Morning start<input id="t-am" type="time" value="09:00" step="300"></label>
+        <label for="t-pm">Afternoon start<input id="t-pm" type="time" value="13:00" step="300"></label>
+      </div>
+      <p>Your school sets the real start times. Ask your IB coordinator and update them here.</p>
+    </details>
+  </section>
+
+  <section aria-labelledby="s2" id="exams">
+    <h2 id="s2"><span class="step">2</span>Your exams</h2>
+    <div id="out"></div>
+  </section>
+
+  <footer>
+    <p>Unofficial and not affiliated with the IB. Dates and paper lengths come from <a href="https://www.clastify.com/knowledge-hub/post/ib-exam-dates-may-2027" target="_blank" rel="noopener">Clastify's May 2027 timetable</a>. Confirm everything with your IB coordinator.</p>
+    <p>Orthodox Good Friday (30 Apr) and Easter Monday (3 May) are exam days. Arts subjects have no written papers on this timetable. Your choices are saved only on your own device.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Timetable data (Clastify, May 2027) ---------- */
+  var GROUPS = [
+    {id:1, name:"Group 1: Language and literature"},
+    {id:2, name:"Group 2: Language acquisition"},
+    {id:3, name:"Group 3: Individuals and societies"},
+    {id:4, name:"Group 4: Sciences"},
+    {id:5, name:"Group 5: Mathematics"},
+    {id:0, name:"Other"}
+  ];
+  // [id, name, group, levels ("HS" = HL and SL, "S" = SL only)]
+  var SUBJECTS = [
+    ["enaLL","English A: Language & Literature",1,"HS"],
+    ["enaLit","English A: Literature",1,"HS"],
+    ["mgaLL","Modern Greek A: Language & Literature",1,"HS"],
+    ["mgaLit","Modern Greek A: Literature",1,"HS"],
+    ["olaLL","Language A: Language & Literature (any other language)",1,"HS"],
+    ["olaLit","Language A: Literature (any other language)",1,"HS"],
+    ["esaLL","Spanish A: Language & Literature",1,"HS"],
+    ["esaLit","Spanish A: Literature",1,"HS"],
+    ["frLL","French A: Language & Literature",1,"HS"],
+    ["frLit","French A: Literature",1,"HS"],
+    ["litp","Literature & Performance",1,"S"],
+    ["enb","English B",2,"HS"],
+    ["enab","English ab initio",2,"S"],
+    ["esb","Spanish B",2,"HS"],
+    ["esab","Spanish ab initio",2,"S"],
+    ["frb","French B",2,"HS"],
+    ["frab","French ab initio",2,"S"],
+    ["olb","Language B (other, e.g. German)",2,"HS"],
+    ["oab","Language ab initio (other, e.g. German)",2,"S"],
+    ["lat","Latin",2,"HS"],
+    ["cg","Classical Greek",2,"HS"],
+    ["lc","Language & culture",2,"S"],
+    ["bm","Business Management",3,"HS"],
+    ["econ","Economics",3,"HS"],
+    ["geo","Geography",3,"HS"],
+    ["his","History",3,"HS"],
+    ["psy","Psychology",3,"HS"],
+    ["phil","Philosophy",3,"HS"],
+    ["sca","Social & Cultural Anthropology",3,"HS"],
+    ["ds","Digital Society",3,"HS"],
+    ["gp","Global Politics",3,"HS"],
+    ["wr","World Religions",3,"S"],
+    ["bio","Biology",4,"HS"],
+    ["ess","Environmental Systems & Societies",4,"HS"],
+    ["chem","Chemistry",4,"HS"],
+    ["phy","Physics",4,"HS"],
+    ["cs","Computer Science",4,"HS"],
+    ["dt","Design Technology",4,"HS"],
+    ["sehs","Sports, Exercise & Health Science",4,"HS"],
+    ["maa","Math: Analysis & Approaches",5,"HS"],
+    ["mai","Math: Applications & Interpretation",5,"HS"],
+    ["sbs","School-based syllabus",0,"S"]
+  ];
+  var SHORT = {olaLL:"Language A: Language & Literature", olaLit:"Language A: Literature", olb:"Language B", oab:"Language ab initio"};
+  var SUB = {};
+  SUBJECTS.forEach(function(r){ SUB[r[0]] = {id:r[0], name:r[1], short:SHORT[r[0]]||r[1], group:r[2], levels:r[3]}; });
+
+  var P = [];
+  function add(s, lv, paper, md, ses, min){ P.push({s:s, lv:lv, paper:paper, date:"2027-"+md, ses:ses, min:min}); }
+  function langA(ids, d1, d2){ ids.forEach(function(id){
+    add(id,"HL","Paper 1",d1,"PM",135); add(id,"SL","Paper 1",d1,"PM",75); add(id,"HLSL","Paper 2",d2,"AM",105);
+  }); }
+  function langB(b, ab, d1, d2){
+    add(b,"HL","Paper 1",d1,"PM",90); add(b,"HL","Paper 2 Reading",d1,"PM",60);
+    add(b,"SL","Paper 1",d1,"PM",75); add(b,"SL","Paper 2 Reading",d1,"PM",60);
+    add(b,"HL","Paper 2 Listening",d2,"AM",60); add(b,"SL","Paper 2 Listening",d2,"AM",45);
+    add(ab,"SL","Paper 1",d1,"PM",60); add(ab,"SL","Paper 2 Reading",d1,"PM",60); add(ab,"SL","Paper 2 Listening",d2,"AM",45);
+  }
+  function sci(id, d1, d2, hl1, sl1, hl2, sl2, p1){
+    add(id,"HL",p1,d1,"PM",hl1); add(id,"SL",p1,d1,"PM",sl1);
+    add(id,"HL","Paper 2",d2,"AM",hl2); add(id,"SL","Paper 2",d2,"AM",sl2);
+  }
+  var AB = "Paper 1 (1A + 1B)";
+  langA(["olaLit","olaLL","mgaLit","mgaLL"],"04-26","04-27");
+  langA(["enaLit","enaLL"],"05-06","05-07");
+  langA(["esaLit","esaLL"],"05-12","05-13");
+  langA(["frLit","frLL"],"05-17","05-18");
+  langB("olb","oab","05-04","05-05");
+  langB("enb","enab","05-06","05-07");
+  langB("esb","esab","05-12","05-13");
+  langB("frb","frab","05-17","05-18");
+  sci("phy","04-28","04-29",120,90,150,90,AB);
+  sci("sehs","04-28","04-29",105,90,150,90,AB);
+  sci("chem","05-05","05-06",120,90,150,90,AB);
+  sci("bio","05-10","05-11",120,90,150,90,AB);
+  sci("dt","05-05","05-06",90,60,150,90,"Paper 1");
+  sci("cs","04-30","05-03",120,75,120,75,"Paper 1");
+  sci("ess","04-30","05-03",120,60,150,120,"Paper 1");
+  add("lc","SL","Paper 1","04-23","PM",90); add("lc","SL","Paper 2","04-26","AM",90);
+  add("sbs","SL","Paper 1","04-23","PM",null); add("sbs","SL","Paper 2","04-26","AM",null);
+  add("bm","HLSL","Paper 1","04-27","PM",90); add("bm","HL","Paper 3","04-27","PM",75);
+  add("bm","HL","Paper 2","04-28","AM",105); add("bm","SL","Paper 2","04-28","AM",90);
+  add("psy","HLSL","Paper 1","04-29","PM",90); add("psy","HLSL","Paper 2","04-29","PM",90); add("psy","HL","Paper 3","04-30","AM",105);
+  add("his","HLSL","Paper 1","05-03","PM",60); add("his","HLSL","Paper 2","05-03","PM",90); add("his","HL","Paper 3","05-04","AM",150);
+  add("lat","HL","Paper 1","05-04","PM",120); add("lat","SL","Paper 1","05-04","PM",90);
+  add("lat","HL","Paper 2","05-05","AM",90); add("lat","SL","Paper 2","05-05","AM",90);
+  add("litp","SL","Paper 1","05-07","AM",105);
+  add("geo","HL","Paper 1","05-07","PM",135); add("geo","SL","Paper 1","05-07","PM",90);
+  add("geo","HLSL","Paper 2","05-10","AM",75); add("geo","HL","Paper 3","05-10","AM",60);
+  add("phil","HL","Paper 1","05-07","PM",150); add("phil","SL","Paper 1","05-07","PM",105);
+  add("phil","HLSL","Paper 2","05-10","AM",60); add("phil","HL","Paper 3","05-10","AM",75);
+  add("sca","HL","Paper 1","05-07","PM",120); add("sca","SL","Paper 1","05-07","PM",90);
+  add("sca","HL","Paper 2","05-10","AM",150); add("sca","SL","Paper 2","05-10","AM",90);
+  add("econ","HLSL","Paper 2","05-11","PM",105);
+  add("econ","HL","Paper 1","05-12","AM",75); add("econ","HL","Paper 3","05-12","AM",105); add("econ","SL","Paper 1","05-12","AM",75);
+  add("wr","SL","Paper 1","05-11","PM",75); add("wr","SL","Paper 2","05-12","AM",90);
+  add("cg","HL","Paper 1","05-12","PM",120); add("cg","SL","Paper 1","05-12","PM",90); add("cg","HLSL","Paper 2","05-13","AM",90);
+  ["maa","mai"].forEach(function(m){
+    add(m,"HL","Paper 1","05-13","PM",120); add(m,"SL","Paper 1","05-13","PM",90);
+    add(m,"HL","Paper 2","05-14","AM",120); add(m,"SL","Paper 2","05-14","AM",90);
+    add(m,"HL","Paper 3","05-18","PM",75);
+  });
+  add("ds","HL","Paper 1","05-14","PM",135); add("ds","SL","Paper 1","05-14","PM",90);
+  add("ds","HLSL","Paper 2","05-17","AM",75); add("ds","HL","Paper 3","05-17","AM",75);
+  add("gp","HLSL","Paper 1","05-14","PM",75); add("gp","HLSL","Paper 2","05-14","PM",105); add("gp","HL","Paper 3","05-17","AM",90);
+
+  /* ---------- Helpers ---------- */
+  var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function parts(iso){ var a = iso.split("-").map(Number); var dt = new Date(Date.UTC(a[0],a[1]-1,a[2])); return {y:a[0], m:a[1], d:a[2], wd:dt.getUTCDay(), t:dt.getTime()}; }
+  function pad(n){ return (n<10?"0":"")+n; }
+  function fmtDay(iso){ var p = parts(iso); return WD[p.wd]+" "+p.d+" "+MON[p.m-1]; }
+  function shortDay(iso){ var p = parts(iso); return p.d+" "+MON[p.m-1]; }
+  function dur(min){ if(min==null) return "length not listed"; var h = Math.floor(min/60), m = min%60; return (h? h+"h":"")+(h&&m?" ":"")+(m? m+"m":""); }
+  function toMin(hhmm){ var a = (hhmm||"").split(":").map(Number); if(a.length<2||isNaN(a[0])||isNaN(a[1])) return null; return a[0]*60+a[1]; }
+  function hm(min){ min = ((min%1440)+1440)%1440; return pad(Math.floor(min/60))+":"+pad(min%60); }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+  var TZ = "Europe/Athens";
+  try { TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || TZ; } catch(e) {}
+  function store(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+  function load(key){ try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch(e) { return null; } }
+
+  /* ---------- State ---------- */
+  var MIN_ROWS = 6;
+  var EXAMPLE = [["bio","HL"],["chem","HL"],["econ","HL"],["maa","SL"],["enaLL","SL"],["esab","SL"]];
+  var state = {rows:[], am:"09:00", pm:"13:00"};
+  function blank(){ return {s:"", lv:""}; }
+  function padRows(){ while (state.rows.length < MIN_ROWS) state.rows.push(blank()); }
+  function cleanRow(r){
+    if (!r || !SUB[r.s]) return blank();
+    var lv = (r.lv==="HL" && SUB[r.s].levels==="HS") ? "HL" : "SL";
+    return {s:r.s, lv:lv};
+  }
+  function save(){ store("m27.v2", state); }
+
+  function boot(data){
+    data = data || {};
+    var saved = (data.rows ? data : null) || load("m27.v2");
+    if (saved && Array.isArray(saved.rows)) {
+      state.rows = saved.rows.map(cleanRow);
+      state.am = toMin(saved.am)!=null ? saved.am : state.am;
+      state.pm = toMin(saved.pm)!=null ? saved.pm : state.pm;
+    } else {
+      var old = load("m27.state");
+      state.rows = [];
+      if (old && old.sel && !old.example) Object.keys(old.sel).forEach(function(k){ if (SUB[k]) state.rows.push(cleanRow({s:k, lv:old.sel[k]})); });
+    }
+    // Keep only one copy of each subject
+    var seen = {};
+    state.rows = state.rows.map(function(r){ if (r.s && seen[r.s]) return blank(); if (r.s) seen[r.s] = true; return r; });
+    padRows();
+    document.getElementById("t-am").value = state.am;
+    document.getElementById("t-pm").value = state.pm;
+    renderRows(); render();
+  }
+
+  /* ---------- Subject rows ---------- */
+  var rowsEl = document.getElementById("rows");
+  var OPTS = GROUPS.map(function(g){
+    var opts = SUBJECTS.filter(function(r){ return r[2]===g.id; }).map(function(r){
+      return '<option value="'+r[0]+'">'+esc(r[1])+(r[3]==="S"?" (SL only)":"")+'</option>';
+    }).join("");
+    return '<optgroup label="'+esc(g.name)+'">'+opts+'</optgroup>';
+  }).join("");
+
+  function renderRows(){
+    rowsEl.innerHTML = state.rows.map(function(r, i){
+      return '<div class="row" data-i="'+i+'">' +
+        '<select id="subj-'+i+'" aria-label="Subject '+(i+1)+'"><option value="">Choose subject '+(i+1)+'</option>'+OPTS+'</select>' +
+        '<div class="seg" role="group" aria-label="Level for subject '+(i+1)+'">' +
+          '<button type="button" data-lv="HL">HL</button><button type="button" data-lv="SL">SL</button>' +
+        '</div>' +
+        '<button type="button" class="x" aria-label="Remove subject '+(i+1)+'">&times;</button>' +
+      '</div>';
+    }).join("");
+    syncRows();
+  }
+  function syncRows(){
+    var used = {};
+    state.rows.forEach(function(r){ if (r.s) used[r.s] = true; });
+    rowsEl.querySelectorAll(".row").forEach(function(el){
+      var i = +el.dataset.i, r = state.rows[i]; if (!r) return;
+      var sel = el.querySelector("select");
+      sel.value = r.s; sel.classList.toggle("empty", !r.s);
+      Array.prototype.forEach.call(sel.options, function(o){ if (o.value) o.disabled = !!used[o.value] && o.value !== r.s; });
+      el.querySelectorAll(".seg button").forEach(function(b){
+        var lv = b.dataset.lv;
+        b.setAttribute("aria-pressed", r.s && r.lv===lv ? "true" : "false");
+        b.disabled = !r.s || (lv==="HL" && SUB[r.s].levels==="S");
+      });
+      el.querySelector(".x").classList.toggle("ghost", !r.s && state.rows.length <= MIN_ROWS);
+    });
+    var hl = 0, sl = 0;
+    state.rows.forEach(function(r){ if (r.s) { if (r.lv==="HL") hl++; else sl++; } });
+    document.getElementById("tally").textContent = (hl+sl) ? hl+" HL · "+sl+" SL" : "";
+    document.getElementById("clear-all").hidden = !(hl+sl);
+    document.getElementById("times-sum").innerHTML = 'Start times: '+esc(state.am)+' morning, '+esc(state.pm)+' afternoon. <u>Change</u>';
+  }
+  function changed(){ syncRows(); render(); save(); }
+
+  rowsEl.addEventListener("change", function(e){
+    var sel = e.target.closest("select"); if (!sel) return;
+    var i = +sel.closest(".row").dataset.i, s = sel.value;
+    if (!s) { state.rows[i] = blank(); }
+    else {
+      var hlOthers = state.rows.filter(function(r, j){ return j!==i && r.s && r.lv==="HL"; }).length;
+      var lv = SUB[s].levels==="S" ? "SL" : (state.rows[i].s && state.rows[i].lv==="HL" ? "HL" : (hlOthers < 3 ? "HL" : "SL"));
+      state.rows[i] = {s:s, lv:lv};
+    }
+    changed();
+  });
+  rowsEl.addEventListener("click", function(e){
+    var row = e.target.closest(".row"); if (!row) return;
+    var i = +row.dataset.i;
+    var b = e.target.closest(".seg button");
+    if (b && !b.disabled) { state.rows[i].lv = b.dataset.lv; changed(); return; }
+    if (e.target.closest(".x")) {
+      if (state.rows.length > MIN_ROWS) { state.rows.splice(i,1); renderRows(); render(); save(); }
+      else { state.rows[i] = blank(); changed(); }
+      var next = document.getElementById("subj-"+Math.min(i, state.rows.length-1)); if (next) next.focus();
+    }
+  });
+  document.getElementById("add-row").addEventListener("click", function(){
+    state.rows.push(blank()); renderRows(); save();
+    var s = document.getElementById("subj-"+(state.rows.length-1)); if (s) s.focus();
+  });
+  document.getElementById("clear-all").addEventListener("click", function(){
+    state.rows = []; padRows(); renderRows(); render(); save();
+  });
+  ["t-am","t-pm"].forEach(function(id){
+    document.getElementById(id).addEventListener("change", function(e){
+      if (toMin(e.target.value)==null) return;
+      if (id==="t-am") state.am = e.target.value; else state.pm = e.target.value;
+      changed();
+    });
+  });
+
+  /* ---------- Build the exam list ---------- */
+  function picked(){ return state.rows.filter(function(r){ return r.s && r.lv; }); }
+  function events(){
+    var map = {};
+    picked().forEach(function(r){
+      P.forEach(function(p){
+        if (p.s!==r.s || !(p.lv===r.lv || p.lv==="HLSL")) return;
+        var k = p.date+"|"+p.ses+"|"+r.s;
+        if (!map[k]) map[k] = {s:r.s, lv:r.lv, date:p.date, ses:p.ses, papers:[], min:0};
+        map[k].papers.push(p);
+        map[k].min = (map[k].min==null || p.min==null) ? null : map[k].min + p.min;
+      });
+    });
+    var list = Object.keys(map).map(function(k){ return map[k]; });
+    list.sort(function(a,b){ return a.date<b.date?-1:a.date>b.date?1:(a.ses===b.ses? SUB[a.s].short.localeCompare(SUB[b.s].short) : (a.ses==="AM"?-1:1)); });
+    var bySes = {};
+    list.forEach(function(ev){ var k = ev.date+"|"+ev.ses; (bySes[k] = bySes[k]||[]).push(ev); });
+    list.forEach(function(ev){
+      ev.clashWith = bySes[ev.date+"|"+ev.ses].filter(function(o){ return o!==ev; }).map(label);
+      var st = toMin(ev.ses==="AM" ? state.am : state.pm);
+      if (st==null) st = ev.ses==="AM" ? 540 : 780;
+      ev.start = st; ev.end = st + (ev.min==null ? 60 : ev.min);
+    });
+    return list;
+  }
+  function label(ev){ return SUB[ev.s].short + " " + ev.lv; }
+  function paperText(ev){ return ev.papers.map(function(p){ return p.paper; }).join(" + "); }
+  function paperDetail(ev){ return ev.papers.map(function(p){ return p.paper+" ("+dur(p.min)+")"; }).join(", "); }
+  function title(ev){ return "IB Exam: " + label(ev) + ", " + paperText(ev); }
+  function desc(ev){
+    var lines = ["May 2027 IB exam, " + (ev.ses==="AM"?"morning":"afternoon") + " session.", "Papers: " + paperDetail(ev) + "."];
+    if (ev.papers.length>1) lines.push("Order and any break between papers not listed.");
+    if (ev.min==null) lines.push("Paper length not listed; this block is a placeholder.");
+    lines.push("Start time is a placeholder. Confirm the exact time with your IB coordinator.");
+    lines.push("Source: Clastify May 2027 timetable, https://www.clastify.com/knowledge-hub/post/ib-exam-dates-may-2027");
+    return lines.join("\n");
+  }
+  function stamp(iso, min){ return iso.replace(/-/g,"") + "T" + pad(Math.floor(min/60)) + pad(min%60) + "00"; }
+  function gcal(ev){
+    return "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(title(ev)) +
+      "&dates=" + stamp(ev.date, ev.start) + "/" + stamp(ev.date, ev.end) +
+      "&details=" + encodeURIComponent(desc(ev)) +
+      "&ctz=" + encodeURIComponent(TZ);
+  }
+
+  /* ---------- Render ---------- */
+  var out = document.getElementById("out");
+  var lastEvents = [];
+  function render(){
+    var evs = events(); lastEvents = evs;
+    if (!evs.length){
+      out.innerHTML = '<div class="empty"><p>Pick your subjects above and your exams show up here.</p>' +
+        '<button class="linkbtn quiet" type="button" id="try-ex">Or try an example</button></div>';
+      return;
+    }
+    var days = {}; evs.forEach(function(ev){ (days[ev.date] = days[ev.date]||[]).push(ev); });
+    var keys = Object.keys(days).sort();
+    var papers = evs.reduce(function(n,ev){ return n + ev.papers.length; }, 0);
+    var now = new Date(); var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    var until = Math.round((parts(keys[0]).t - today)/86400000);
+    var clashes = evs.filter(function(ev){ return ev.clashWith.length; }).length;
+
+    var h = '<p class="summary"><b>'+papers+' papers</b> over <b>'+keys.length+' days</b>, '+shortDay(keys[0])+' to '+shortDay(keys[keys.length-1])+'.' +
+      (until>0 ? ' First exam in '+until+' days.' : '') +
+      (clashes ? ' <span style="color:var(--warn)">Two of your subjects share a session. Check with your coordinator.</span>' : '') + '</p>';
+
+    var E = env();
+    if (E.inApp) {
+      h += '<div class="applebox warnbox"><b>Open this page in your browser first</b>' +
+        '<p class="hint">This app\'s built-in browser can\'t add events to your calendar. Tap <b>•••</b> or the share button and choose <b>Open in Safari</b> (iPhone) or <b>Open in Chrome</b> (Android).</p>' +
+        '<div class="actions"><button class="btn alt" type="button" id="copylink">Copy page link</button></div></div>';
+    }
+    if (E.ios) {
+      var custom = state.am !== "09:00" || state.pm !== "13:00";
+      h += '<div class="applebox"><b>Add to Apple Calendar</b>' +
+        '<p class="hint">Tap a subject, then tap <b>Add All</b>. Come back here and repeat for each subject.' +
+        (custom ? ' These use 09:00 and 13:00 start times, not your custom ones.' : '') +
+        (E.iosOther ? ' If nothing opens, try this page in Safari.' : '') + '</p>' +
+        '<div class="sublinks">' + picked().map(function(r){
+          return '<a class="btn alt" href="'+r.s+'-'+r.lv+'.ics">'+esc(SUB[r.s].short+' '+r.lv)+'</a>';
+        }).join('') + '</div></div>';
+      h += '<div class="actions"><button class="btn alt" type="button" id="copy">Copy list</button></div>' +
+        '<p class="status" id="status" aria-live="polite"></p><div id="copybox"></div>';
+    } else {
+      h += '<div class="actions">' +
+        '<button class="btn" type="button" id="ics">' + (E.android ? 'Download calendar file' : 'Add all to my calendar') + '</button>' +
+        '<button class="btn alt" type="button" id="copy">Copy list</button>' +
+        '</div><p class="status" id="status" aria-live="polite">' +
+        (E.android ? 'Opens in Samsung Calendar or Outlook. The Google Calendar app can\'t open calendar files, so use Add to Google Calendar on each exam below.' : 'Works with Apple Calendar, Google Calendar and Outlook.') +
+        '</p><div id="copybox"></div>';
+    }
+
+    h += '<div class="list">';
+    keys.forEach(function(iso){
+      var p = parts(iso);
+      h += '<div class="day"><div class="date"><span>'+WD[p.wd]+'</span><b>'+p.d+' '+MON[p.m-1]+'</b></div><div class="items">';
+      days[iso].forEach(function(ev){
+        h += '<div class="item">' +
+          '<div><span class="subj">'+esc(label(ev))+'</span></div>' +
+          '<a class="add" href="'+esc(gcal(ev))+'" target="_blank" rel="noopener">Add to Google Calendar</a>' +
+          '<div class="meta">'+hm(ev.start)+'–'+hm(ev.end)+' · '+esc(paperDetail(ev))+'</div>' +
+          (ev.clashWith.length ? '<div class="clash">Same session as '+esc(ev.clashWith.join(", "))+'</div>' : '') +
+          '</div>';
+      });
+      h += '</div></div>';
+    });
+    h += '</div>';
+    out.innerHTML = h;
+  }
+
+  out.addEventListener("click", function(e){
+    if (e.target.closest("#try-ex")) {
+      state.rows = EXAMPLE.map(function(x){ return {s:x[0], lv:x[1]}; }); padRows(); renderRows(); render(); save();
+    } else if (e.target.closest("#ics")) saveIcs();
+    else if (e.target.closest("#copy")) copyText();
+    else if (e.target.closest("#copylink")) copyLink();
+  });
+
+  /* ---------- Exports ---------- */
+  function setStatus(t){ var s = document.getElementById("status"); if (s) s.textContent = t; }
+  function icsEsc(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n"); }
+  function fold(line){ var out = []; while (line.length > 73) { out.push(line.slice(0,73)); line = " " + line.slice(73); } out.push(line); return out.join("\r\n"); }
+  function utcNow(){ var d = new Date(); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z"; }
+  function buildIcs(){
+    var now = utcNow();
+    var L = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//IB May 2027 Exam Planner//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:IB May 2027 exams"];
+    lastEvents.forEach(function(ev){
+      L.push("BEGIN:VEVENT",
+        "UID:m27-"+ev.s+"-"+ev.lv+"-"+ev.date.replace(/-/g,"")+"-"+ev.ses+"@ib-exam-planner",
+        "DTSTAMP:"+now,
+        "DTSTART:"+stamp(ev.date, ev.start),
+        "DTEND:"+stamp(ev.date, ev.end),
+        "SUMMARY:"+icsEsc(title(ev)),
+        "DESCRIPTION:"+icsEsc(desc(ev)),
+        "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+icsEsc(title(ev)),"TRIGGER:-P1D","END:VALARM",
+        "END:VEVENT");
+    });
+    L.push("END:VCALENDAR");
+    return L.map(fold).join("\r\n") + "\r\n";
+  }
+  function env(){
+    var ua = navigator.userAgent || "", ios = isIOS(), android = /Android/i.test(ua);
+    var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Snapchat|Line\/|MicroMessenger|TikTok|musical_ly|BytedanceWebview|Viber|LinkedInApp|Twitter|Pinterest/i.test(ua) ||
+      (ios && !/Safari\//.test(ua)) || (android && /; wv\)/.test(ua));
+    return {ios:ios, android:android, inApp:inApp, iosOther: ios && /CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua)};
+  }
+  function isIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
+  function saveIcs(){
+    if (!lastEvents.length) return;
+    var ics = buildIcs();
+    var url = URL.createObjectURL(new Blob([ics], {type:"text/calendar;charset=utf-8"}));
+    var a = document.createElement("a"); a.href = url; a.download = "ib-may-2027-exams.ics";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
+    setStatus("Downloaded. Open ib-may-2027-exams.ics to add your exams. For Google Calendar on a computer, use Settings, then Import & export.");
+  }
+  function copyLink(){
+    var link = location.href.split("#")[0];
+    var done = function(){ setStatus("Link copied. Paste it into Safari or Chrome."); };
+    try { navigator.clipboard.writeText(link).then(done, function(){ setStatus(link); }); } catch(e) { setStatus(link); }
+  }
+  function plainText(){
+    var lines = ["My IB May 2027 exams", ""], cur = "";
+    lastEvents.forEach(function(ev){
+      if (ev.date!==cur){ if (cur) lines.push(""); cur = ev.date; lines.push(fmtDay(ev.date)); }
+      lines.push("  " + hm(ev.start) + "-" + hm(ev.end) + "  " + label(ev) + ": " + paperDetail(ev));
+    });
+    lines.push("", "Unofficial, from Clastify. Start times are placeholders.");
+    return lines.join("\n");
+  }
+  function copyText(){
+    var txt = plainText(), box = document.getElementById("copybox"); box.innerHTML = "";
+    var fallback = function(){
+      var ta = document.createElement("textarea"); ta.className = "copyout"; ta.id = "copyout"; ta.readOnly = true; ta.value = txt;
+      ta.setAttribute("aria-label","Your exams as text"); box.appendChild(ta); ta.focus(); ta.select();
+      setStatus("Copying is blocked here. The list is selected below, so copy it yourself.");
+    };
+    try { navigator.clipboard.writeText(txt).then(function(){ setStatus("Copied. Paste it anywhere."); }, fallback); }
+    catch(e) { fallback(); }
+  }
+
+  /* ---------- Start ---------- */
+  boot({});
+})();
+</script>
+</body>
+</html>
