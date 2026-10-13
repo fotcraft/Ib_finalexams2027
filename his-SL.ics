@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-his-SL-20270503-PM@ib-exam-planner
+DTSTAMP:20261012T150401Z
+DTSTART:20270503T130000
+DTEND:20270503T153000
+SUMMARY:IB Exam: History SL\, Paper 1 + Paper 2
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (1h)\,
+  Paper 2 (1h 30m).\nOrder and any break between papers not listed.\nStar
+ t time is a placeholder. Confirm the exact time with your IB coordinator
+ .\nSource: Clastify May 2027 timetable\, https://www.clastify.com/knowle
+ dge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: History SL\, Paper 1 + Paper 2
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

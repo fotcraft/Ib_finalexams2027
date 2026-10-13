@@ -74,6 +74,11 @@ details.times summary u{text-underline-offset:3px;color:var(--ink)}
 .times p{margin:10px 0 0}
 
 /* Results */
+a.btn{display:inline-flex;align-items:center;text-decoration:none}
+.applebox{display:grid;gap:8px;padding:14px;border:1px solid var(--line);border-radius:12px}
+.applebox .hint{margin:0;font-size:14px;color:var(--muted)}
+.sublinks{display:flex;flex-wrap:wrap;gap:8px}
+.warnbox{border-color:var(--warn)}
 .summary{margin:0;color:var(--muted)}
 .summary b{color:var(--ink);font-weight:600}
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -102,8 +107,8 @@ textarea.copyout{width:100%;min-height:150px;padding:12px;border:1px solid var(-
   .item{grid-template-columns:minmax(0,1fr)}
   .add{grid-column:1;grid-row:auto}
 }
-.empty{padding:28px 20px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
-.empty p{margin:0}
+div.empty{padding:28px 20px;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
+div.empty p{margin:0}
 
 footer{font-size:13px;color:var(--muted);display:grid;gap:6px;border-top:1px solid var(--line);padding-top:16px}
 footer p{margin:0}
@@ -468,10 +473,31 @@ footer p{margin:0}
       (until>0 ? ' First exam in '+until+' days.' : '') +
       (clashes ? ' <span style="color:var(--warn)">Two of your subjects share a session. Check with your coordinator.</span>' : '') + '</p>';
 
-    h += '<div class="actions">' +
-      '<button class="btn" type="button" id="ics">Add all to my calendar</button>' +
-      '<button class="btn alt" type="button" id="copy">Copy list</button>' +
-      '</div><p class="status" id="status" aria-live="polite">Works with Apple Calendar, Google Calendar and Outlook.</p><div id="copybox"></div>';
+    var E = env();
+    if (E.inApp) {
+      h += '<div class="applebox warnbox"><b>Open this page in your browser first</b>' +
+        '<p class="hint">This app\'s built-in browser can\'t add events to your calendar. Tap <b>•••</b> or the share button and choose <b>Open in Safari</b> (iPhone) or <b>Open in Chrome</b> (Android).</p>' +
+        '<div class="actions"><button class="btn alt" type="button" id="copylink">Copy page link</button></div></div>';
+    }
+    if (E.ios) {
+      var custom = state.am !== "09:00" || state.pm !== "13:00";
+      h += '<div class="applebox"><b>Add to Apple Calendar</b>' +
+        '<p class="hint">Tap a subject, then tap <b>Add All</b>. Come back here and repeat for each subject.' +
+        (custom ? ' These use 09:00 and 13:00 start times, not your custom ones.' : '') +
+        (E.iosOther ? ' If nothing opens, try this page in Safari.' : '') + '</p>' +
+        '<div class="sublinks">' + picked().map(function(r){
+          return '<a class="btn alt" href="cal/'+r.s+'-'+r.lv+'.ics">'+esc(SUB[r.s].short+' '+r.lv)+'</a>';
+        }).join('') + '</div></div>';
+      h += '<div class="actions"><button class="btn alt" type="button" id="copy">Copy list</button></div>' +
+        '<p class="status" id="status" aria-live="polite"></p><div id="copybox"></div>';
+    } else {
+      h += '<div class="actions">' +
+        '<button class="btn" type="button" id="ics">' + (E.android ? 'Download calendar file' : 'Add all to my calendar') + '</button>' +
+        '<button class="btn alt" type="button" id="copy">Copy list</button>' +
+        '</div><p class="status" id="status" aria-live="polite">' +
+        (E.android ? 'Opens in Samsung Calendar or Outlook. The Google Calendar app can\'t open calendar files, so use Add to Google Calendar on each exam below.' : 'Works with Apple Calendar, Google Calendar and Outlook.') +
+        '</p><div id="copybox"></div>';
+    }
 
     h += '<div class="list">';
     keys.forEach(function(iso){
@@ -496,11 +522,12 @@ footer p{margin:0}
       state.rows = EXAMPLE.map(function(x){ return {s:x[0], lv:x[1]}; }); padRows(); renderRows(); render(); save();
     } else if (e.target.closest("#ics")) saveIcs();
     else if (e.target.closest("#copy")) copyText();
+    else if (e.target.closest("#copylink")) copyLink();
   });
 
   /* ---------- Exports ---------- */
   function setStatus(t){ var s = document.getElementById("status"); if (s) s.textContent = t; }
-  function icsEsc(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n"); }
+  function icsEsc(s){ return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n"); }
   function fold(line){ var out = []; while (line.length > 73) { out.push(line.slice(0,73)); line = " " + line.slice(73); } out.push(line); return out.join("\r\n"); }
   function utcNow(){ var d = new Date(); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+"T"+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+"Z"; }
   function buildIcs(){
@@ -520,20 +547,26 @@ footer p{margin:0}
     L.push("END:VCALENDAR");
     return L.map(fold).join("\r\n") + "\r\n";
   }
+  function env(){
+    var ua = navigator.userAgent || "", ios = isIOS(), android = /Android/i.test(ua);
+    var inApp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Snapchat|Line\/|MicroMessenger|TikTok|musical_ly|BytedanceWebview|Viber|LinkedInApp|Twitter|Pinterest/i.test(ua) ||
+      (ios && !/Safari\//.test(ua)) || (android && /; wv\)/.test(ua));
+    return {ios:ios, android:android, inApp:inApp, iosOther: ios && /CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(ua)};
+  }
   function isIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); }
   function saveIcs(){
     if (!lastEvents.length) return;
     var ics = buildIcs();
-    if (isIOS()) {
-      setStatus("Tap Add All to put the exams in your calendar. If nothing opens, open this page in Safari.");
-      window.location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
-      return;
-    }
     var url = URL.createObjectURL(new Blob([ics], {type:"text/calendar;charset=utf-8"}));
     var a = document.createElement("a"); a.href = url; a.download = "ib-may-2027-exams.ics";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 5000);
     setStatus("Downloaded. Open ib-may-2027-exams.ics to add your exams. For Google Calendar on a computer, use Settings, then Import & export.");
+  }
+  function copyLink(){
+    var link = location.href.split("#")[0];
+    var done = function(){ setStatus("Link copied. Paste it into Safari or Chrome."); };
+    try { navigator.clipboard.writeText(link).then(done, function(){ setStatus(link); }); } catch(e) { setStatus(link); }
   }
   function plainText(){
     var lines = ["My IB May 2027 exams", ""], cur = "";

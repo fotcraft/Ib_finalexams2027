@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-phil-HL-20270507-PM@ib-exam-planner
+DTSTAMP:20261012T150402Z
+DTSTART:20270507T130000
+DTEND:20270507T153000
+SUMMARY:IB Exam: Philosophy HL\, Paper 1
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (2h 30
+ m).\nStart time is a placeholder. Confirm the exact time with your IB co
+ ordinator.\nSource: Clastify May 2027 timetable\, https://www.clastify.c
+ om/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Philosophy HL\, Paper 1
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-phil-HL-20270510-AM@ib-exam-planner
+DTSTAMP:20261012T150402Z
+DTSTART:20270510T090000
+DTEND:20270510T111500
+SUMMARY:IB Exam: Philosophy HL\, Paper 2 + Paper 3
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 (1h)\, P
+ aper 3 (1h 15m).\nOrder and any break between papers not listed.\nStart 
+ time is a placeholder. Confirm the exact time with your IB coordinator.\
+ nSource: Clastify May 2027 timetable\, https://www.clastify.com/knowledg
+ e-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Philosophy HL\, Paper 2 + Paper 3
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

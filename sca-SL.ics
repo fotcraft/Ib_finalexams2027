@@ -1,0 +1,39 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-sca-SL-20270507-PM@ib-exam-planner
+DTSTAMP:20261012T150403Z
+DTSTART:20270507T130000
+DTEND:20270507T143000
+SUMMARY:IB Exam: Social & Cultural Anthropology SL\, Paper 1
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (1h 30
+ m).\nStart time is a placeholder. Confirm the exact time with your IB co
+ ordinator.\nSource: Clastify May 2027 timetable\, https://www.clastify.c
+ om/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Social & Cultural Anthropology SL\, Paper 1
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-sca-SL-20270510-AM@ib-exam-planner
+DTSTAMP:20261012T150403Z
+DTSTART:20270510T090000
+DTEND:20270510T103000
+SUMMARY:IB Exam: Social & Cultural Anthropology SL\, Paper 2
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 (1h 30m)
+ .\nStart time is a placeholder. Confirm the exact time with your IB coor
+ dinator.\nSource: Clastify May 2027 timetable\, https://www.clastify.com
+ /knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Social & Cultural Anthropology SL\, Paper 2
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

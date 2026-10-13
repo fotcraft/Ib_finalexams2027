@@ -1,0 +1,39 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-bio-HL-20270510-PM@ib-exam-planner
+DTSTAMP:20261012T150406Z
+DTSTART:20270510T130000
+DTEND:20270510T150000
+SUMMARY:IB Exam: Biology HL\, Paper 1 (1A + 1B)
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (1A + 
+ 1B) (2h).\nStart time is a placeholder. Confirm the exact time with your
+  IB coordinator.\nSource: Clastify May 2027 timetable\, https://www.clas
+ tify.com/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Biology HL\, Paper 1 (1A + 1B)
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-bio-HL-20270511-AM@ib-exam-planner
+DTSTAMP:20261012T150406Z
+DTSTART:20270511T090000
+DTEND:20270511T113000
+SUMMARY:IB Exam: Biology HL\, Paper 2
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 (2h 30m)
+ .\nStart time is a placeholder. Confirm the exact time with your IB coor
+ dinator.\nSource: Clastify May 2027 timetable\, https://www.clastify.com
+ /knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Biology HL\, Paper 2
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

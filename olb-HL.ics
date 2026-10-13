@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-olb-HL-20270504-PM@ib-exam-planner
+DTSTAMP:20261012T150355Z
+DTSTART:20270504T130000
+DTEND:20270504T153000
+SUMMARY:IB Exam: Language B HL\, Paper 1 + Paper 2 Reading
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (1h 30
+ m)\, Paper 2 Reading (1h).\nOrder and any break between papers not liste
+ d.\nStart time is a placeholder. Confirm the exact time with your IB coo
+ rdinator.\nSource: Clastify May 2027 timetable\, https://www.clastify.co
+ m/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Language B HL\, Paper 1 + Paper 2 Reading
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-olb-HL-20270505-AM@ib-exam-planner
+DTSTAMP:20261012T150355Z
+DTSTART:20270505T090000
+DTEND:20270505T100000
+SUMMARY:IB Exam: Language B HL\, Paper 2 Listening
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 Listenin
+ g (1h).\nStart time is a placeholder. Confirm the exact time with your I
+ B coordinator.\nSource: Clastify May 2027 timetable\, https://www.clasti
+ fy.com/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: Language B HL\, Paper 2 Listening
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

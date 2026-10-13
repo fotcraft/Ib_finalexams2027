@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-frab-SL-20270517-PM@ib-exam-planner
+DTSTAMP:20261012T150355Z
+DTSTART:20270517T130000
+DTEND:20270517T150000
+SUMMARY:IB Exam: French ab initio SL\, Paper 1 + Paper 2 Reading
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (1h)\,
+  Paper 2 Reading (1h).\nOrder and any break between papers not listed.\n
+ Start time is a placeholder. Confirm the exact time with your IB coordin
+ ator.\nSource: Clastify May 2027 timetable\, https://www.clastify.com/kn
+ owledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: French ab initio SL\, Paper 1 + Paper 2 Reading
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-frab-SL-20270518-AM@ib-exam-planner
+DTSTAMP:20261012T150355Z
+DTSTART:20270518T090000
+DTEND:20270518T094500
+SUMMARY:IB Exam: French ab initio SL\, Paper 2 Listening
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 Listenin
+ g (45m).\nStart time is a placeholder. Confirm the exact time with your 
+ IB coordinator.\nSource: Clastify May 2027 timetable\, https://www.clast
+ ify.com/knowledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: French ab initio SL\, Paper 2 Listening
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

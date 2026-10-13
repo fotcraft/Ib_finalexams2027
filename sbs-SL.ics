@@ -1,0 +1,41 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//IB May 2027 Exam Planner//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:IB May 2027 exams
+BEGIN:VEVENT
+UID:m27-sbs-SL-20270423-PM@ib-exam-planner
+DTSTAMP:20261012T150413Z
+DTSTART:20270423T130000
+DTEND:20270423T140000
+SUMMARY:IB Exam: School-based syllabus SL\, Paper 1
+DESCRIPTION:May 2027 IB exam\, afternoon session.\nPapers: Paper 1 (lengt
+ h not listed).\nPaper length not listed\; this block is a placeholder.\n
+ Start time is a placeholder. Confirm the exact time with your IB coordin
+ ator.\nSource: Clastify May 2027 timetable\, https://www.clastify.com/kn
+ owledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: School-based syllabus SL\, Paper 1
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:m27-sbs-SL-20270426-AM@ib-exam-planner
+DTSTAMP:20261012T150413Z
+DTSTART:20270426T090000
+DTEND:20270426T100000
+SUMMARY:IB Exam: School-based syllabus SL\, Paper 2
+DESCRIPTION:May 2027 IB exam\, morning session.\nPapers: Paper 2 (length 
+ not listed).\nPaper length not listed\; this block is a placeholder.\nSt
+ art time is a placeholder. Confirm the exact time with your IB coordinat
+ or.\nSource: Clastify May 2027 timetable\, https://www.clastify.com/know
+ ledge-hub/post/ib-exam-dates-may-2027
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:IB Exam: School-based syllabus SL\, Paper 2
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR
